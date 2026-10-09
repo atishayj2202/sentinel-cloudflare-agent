@@ -1,6 +1,6 @@
 {
   "scenarios_evaluated": 10,
-  "total_duration_sec": 595.56,
+  "total_duration_sec": 0.61,
   "metrics": {
     "mission_success_rate": 1.0,
     "verified_decision_rate": 1.0,
@@ -15,65 +15,65 @@
       "id": "BENCH-01",
       "name": "Simple Cloudflare Architecture Research",
       "passed": true,
-      "latency": 32.747,
-      "confidence": 0.9713,
-      "claims_count": 6,
-      "verified_claims": 6,
+      "latency": 0.061,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 0
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-02",
       "name": "Conflicting Agent Workload Assumptions (D1 vs DO)",
       "passed": true,
-      "latency": 37.816,
-      "confidence": 0.9713,
-      "claims_count": 6,
-      "verified_claims": 6,
+      "latency": 0.053,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 0
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-03",
       "name": "Weak Evidence Auto-Enrichment",
       "passed": true,
-      "latency": 36.412,
-      "confidence": 0.9713,
-      "claims_count": 6,
-      "verified_claims": 6,
+      "latency": 0.08,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 0
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-04",
       "name": "Transient External Tool 503 Recovery",
       "passed": true,
-      "latency": 74.654,
-      "confidence": 0.9713,
-      "claims_count": 8,
-      "verified_claims": 8,
+      "latency": 0.11,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 0
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-05",
       "name": "Medium-Risk Human Approval Gating",
       "passed": true,
-      "latency": 77.141,
-      "confidence": 0.9741,
-      "claims_count": 10,
-      "verified_claims": 10,
+      "latency": 0.052,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 4
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-06",
       "name": "Human Approval Rejection Safety",
       "passed": true,
-      "latency": 78.387,
-      "confidence": 0.9749,
-      "claims_count": 14,
-      "verified_claims": 14,
+      "latency": 0.05,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
       "conflicts_count": 8
     },
@@ -81,45 +81,45 @@
       "id": "BENCH-07",
       "name": "Closed-Loop Postcondition Verification",
       "passed": true,
-      "latency": 59.381,
-      "confidence": 0.9741,
-      "claims_count": 10,
-      "verified_claims": 10,
+      "latency": 0.051,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 4
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-08",
       "name": "D1 Relational Querying Bounds",
       "passed": true,
-      "latency": 80.361,
-      "confidence": 0.975,
-      "claims_count": 15,
-      "verified_claims": 15,
+      "latency": 0.048,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 9
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-09",
       "name": "Cloudflare Workflows Long-Running State",
       "passed": true,
-      "latency": 67.114,
-      "confidence": 0.9741,
-      "claims_count": 10,
-      "verified_claims": 10,
+      "latency": 0.051,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 4
+      "conflicts_count": 8
     },
     {
       "id": "BENCH-10",
       "name": "Full End-to-End Mission Lifecycle",
       "passed": true,
-      "latency": 51.543,
-      "confidence": 0.9713,
-      "claims_count": 8,
-      "verified_claims": 8,
+      "latency": 0.049,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
       "unsupported_claims": 0,
-      "conflicts_count": 0
+      "conflicts_count": 8
     }
   ]
 }

@@ -82,30 +82,66 @@
             <p>Enforces safety guardrails with human approval before any mutation.</p>
           </div>
         </div>
+
+        <!-- High-Impact Differentiator: Single Agent vs Sentinel -->
+        <div class="comparison-card">
+          <div class="compare-col legacy">
+            <h4>❌ Single Unchecked AI Agent (Standard Chatbot)</h4>
+            <ul>
+              <li>⚠️ <strong>Single Point of Hallucination:</strong> Makes isolated assumptions without peer verification.</li>
+              <li>⚠️ <strong>Outdated API Limits:</strong> Hallucinates non-existent features or deprecated pricing tiers.</li>
+              <li>⚠️ <strong>Blind Mutations:</strong> Pushes Git commits or executes database changes with zero safety gating.</li>
+              <li>⚠️ <strong>Silent 503 Crashes:</strong> Fails midway when external APIs drop connections.</li>
+            </ul>
+          </div>
+          <div class="compare-col sentinel">
+            <h4>🛡️ Sentinel Autonomous Multi-Agent System</h4>
+            <ul>
+              <li>✅ <strong>3 Parallel Specialized Researchers:</strong> Cross-examine every premise from orthogonal perspectives.</li>
+              <li>✅ <strong>Adversarial Conflict Detection:</strong> Verifier actively hunts for premise clashes and contradictions.</li>
+              <li>✅ <strong>Closed-Loop Codex Policy Gate:</strong> High-risk mutations require 1-click human approval with postcondition proof.</li>
+              <li>✅ <strong>Durable 503 Auto-Recovery:</strong> Exponential backoff step retries guarantee zero orphaned state.</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <!-- Input Panel & Quick Scenarios -->
       <div class="panel input-panel">
         <div class="input-header">
-          <h3>Interactive Mission Launcher</h3>
+          <div>
+            <h3>Universal Mission Launcher</h3>
+            <span class="sub-caption">Ask any technical question across Cloudflare, Distributed Systems, Quant, Security, or Databases</span>
+          </div>
           <span class="badge info">Cloudflare Workers AI Llama 3.3 70B</span>
         </div>
 
         <div class="prompt-chips">
-          <span class="chip-label">Run a Live Scenario:</span>
-          <button class="chip active-chip" id="chip-scenario-1" data-scenario="disagreement" data-prompt="For a real-time collaborative application with per-user state, evaluate Cloudflare D1 vs Durable Objects.">
-            ⚔️ 1. Detect Agent Disagreement (D1 vs Durable Objects)
-          </button>
-          <button class="chip" id="chip-scenario-2" data-scenario="approval" data-prompt="Propose an edge caching layer using Workers KV and publish an Architectural Decision Record (ADR) to GitHub.">
-            🛡️ 2. Trigger Codex Approval Gate (PR Mutation)
-          </button>
-          <button class="chip" id="chip-scenario-3" data-scenario="fault" data-prompt="Deploy an edge service with live tool execution while recovering from transient 503 outages.">
-            ⚡ 3. Test 503 Fault Recovery (Exponential Backoff)
-          </button>
+          <span class="chip-label">Test Across 5 High-Impact Domains:</span>
+          <div class="domain-chips-grid">
+            <button class="chip active-chip" id="chip-scenario-1" data-scenario="disagreement" data-prompt="For a real-time collaborative application with per-user state, evaluate Cloudflare D1 vs Durable Objects.">
+              ☁️ Cloudflare Edge: D1 vs Durable Objects
+            </button>
+            <button class="chip" id="chip-quant" data-scenario="quant" data-prompt="Using Brownian motion instead of exact tickers for backtesting an algo trade. Mainly it will save cost and might produce similar results.">
+              📈 Quant Finance: Brownian Motion vs Exact Tickers
+            </button>
+            <button class="chip" id="chip-kafka" data-scenario="kafka" data-prompt="Kafka vs RabbitMQ for edge IoT telemetry ingest with 50,000 events/second. Compare throughput, replay, and resource footprint.">
+              🔀 Distributed Systems: Kafka vs RabbitMQ
+            </button>
+            <button class="chip" id="chip-auth" data-scenario="auth" data-prompt="Stateless JWT tokens vs server-side Redis sessions with instant revocation for enterprise IAM.">
+              🔒 Security & IAM: Stateless JWT vs Server Sessions
+            </button>
+            <button class="chip" id="chip-scenario-2" data-scenario="approval" data-prompt="Propose an edge caching layer using Workers KV and publish an Architectural Decision Record (ADR) to GitHub.">
+              🛡️ Codex Gate: Propose Mutating GitHub ADR
+            </button>
+            <button class="chip" id="chip-scenario-3" data-scenario="fault" data-prompt="Deploy an edge service with live tool execution while recovering from transient 503 outages.">
+              ⚡ Fault Tolerance: Test 503 Auto-Recovery
+            </button>
+          </div>
         </div>
 
         <form id="mission-form" class="mission-form">
-          <textarea id="mission-input" placeholder="Enter an architectural question or task for Sentinel to investigate, verify, and execute..." rows="2" required></textarea>
+          <textarea id="mission-input" placeholder="Enter ANY engineering question, cloud architecture decision, or technical trade-off for Sentinel to investigate, verify, and resolve..." rows="2" required></textarea>
           <div class="form-actions">
             <button type="submit" class="primary-btn" id="btn-run-mission">
               <span>Run Autonomous Mission</span>
@@ -195,6 +231,21 @@
             </div>
             <span class="node-status">Idle</span>
           </div>
+        </div>
+      </div>
+
+      <!-- Live Multi-Agent Telemetry & Event Stream -->
+      <div class="panel telemetry-panel" id="telemetry-panel">
+        <div class="panel-title-row">
+          <div>
+            <h3>⚡ Live Multi-Agent Telemetry Stream</h3>
+            <span class="sub-caption">Real-time inter-agent messaging, premise collision detection, and policy gating</span>
+          </div>
+          <span class="badge success" id="telemetry-status">● Stream Live</span>
+        </div>
+        <div class="telemetry-terminal" id="telemetry-terminal">
+          <div class="telemetry-line event-sys">[00.00s] SYSTEM: Sentinel Cloudflare Edge Coordinator initialized. Workers AI (Llama 3.3 70B) active.</div>
+          <div class="telemetry-line event-sys">[00.00s] POLICY: Codex safety guardrails CODEX-SEC-01 through CODEX-REL-01 armed.</div>
         </div>
       </div>
 
