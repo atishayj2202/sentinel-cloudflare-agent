@@ -326,7 +326,11 @@
         tool_name: 'github.create_issue',
         risk_level: 'medium',
         rule_id: 'CODEX-GITOPS-04',
-        parameters: {
+        parameters: isQuant ? {
+          repo: 'atishayj2202/sentinel-cloudflare-agent',
+          title: 'AUDIT: Quantitative Rejection of Brownian Motion for Strategy Backtesting',
+          body: 'Sentinel audit rejected synthetic Gaussian paths for alpha validation due to unmodeled fat tails and execution slippage.'
+        } : {
           repo: 'atishayj2202/sentinel-cloudflare-agent',
           title: 'ADR-004: Edge State Architecture Decision Record',
           body: 'Hybrid pattern: Durable Objects for real-time WebSocket state, D1 for relational joins.'
@@ -366,7 +370,8 @@
     finishMission(promptText, isQuant, apiResult);
   }
 
-  function finishMission(promptText, isQuant, apiResult) {
+  function finishMission(promptText, isQuantParam, apiResult) {
+    const isQuant = isQuantParam !== undefined ? isQuantParam : /brownian|ticker|trade|backtest|quant|algo|sharpe|market/i.test(promptText);
     missionBadge.innerText = 'COMPLETED';
     missionBadge.className = 'status-badge badge success';
     updateNodeState(nodeAnalyst, 'passed', 'Codex Verified & Closed-Loop Checked ✓');
