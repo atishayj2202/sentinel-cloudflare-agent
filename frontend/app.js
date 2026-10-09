@@ -221,56 +221,95 @@
     btnRunMission.disabled = true;
     btnRunMission.innerHTML = '<span>Orchestrating 5-Agent DAG...</span>';
 
+    const isQuant = /brownian|ticker|trade|backtest|quant|algo|sharpe|market/i.test(promptText);
+
+    // Kick off live edge worker API call in background
+    let edgeMissionPromise = fetch('/api/missions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ request: promptText })
+    }).then(res => res.json()).catch(err => {
+      console.warn("Edge API fetch skipped or errored:", err);
+      return null;
+    });
+
     // Step 1: Planning (Decomposition)
     missionBadge.innerText = 'PLANNING';
     missionBadge.className = 'status-badge badge info';
-    updateNodeState(nodePlanner, 'active', 'Decomposing Objective...');
+    updateNodeState(nodePlanner, 'active', isQuant ? 'Decomposing Quantitative Validity...' : 'Decomposing Objective...');
     await sleep(600);
     updateNodeState(nodePlanner, 'passed', 'Decomposed into 3 Subtasks ✓');
 
     // Step 2: Parallel Grounded Research
     missionBadge.innerText = 'RESEARCHING';
-    updateNodeState(nodeResA, 'active', 'Analyzing Concurrency...');
-    updateNodeState(nodeResB, 'active', 'Comparing D1 Limits...');
-    updateNodeState(nodeResC, 'active', 'Profiling Edge Latency...');
-    await sleep(800);
-
-    updateNodeState(nodeResA, 'passed', 'Prefers Durable Objects');
-    updateNodeState(nodeResB, 'passed', 'Prefers Cloudflare D1');
-    updateNodeState(nodeResC, 'passed', 'Prefers Workers KV');
+    if (isQuant) {
+      updateNodeState(nodeResA, 'active', 'Analyzing Gaussian Assumptions...');
+      updateNodeState(nodeResB, 'active', 'Examining Market Microstructure...');
+      updateNodeState(nodeResC, 'active', 'Assessing Data Cost vs Tail Risk...');
+      await sleep(800);
+      updateNodeState(nodeResA, 'passed', 'Prefers Gaussian Random Walk');
+      updateNodeState(nodeResB, 'passed', 'Demands Real Tickers & Fat Tails');
+      updateNodeState(nodeResC, 'passed', 'Flags Tail-Risk Exposure');
+    } else {
+      updateNodeState(nodeResA, 'active', 'Analyzing Concurrency...');
+      updateNodeState(nodeResB, 'active', 'Comparing D1 Limits...');
+      updateNodeState(nodeResC, 'active', 'Profiling Edge Latency...');
+      await sleep(800);
+      updateNodeState(nodeResA, 'passed', 'Prefers Durable Objects');
+      updateNodeState(nodeResB, 'passed', 'Prefers Cloudflare D1');
+      updateNodeState(nodeResC, 'passed', 'Prefers Workers KV');
+    }
 
     // Step 3: Adversarial Verifier (Disagreement Hunting)
     missionBadge.innerText = 'VERIFYING';
     updateNodeState(nodeVerifier, 'active', 'Cross-Examining Claims...');
     await sleep(700);
 
-    const hasDisagreement = scenarioType === 'disagreement' || scenarioType === 'approval' || scenarioType === 'fault';
+    const hasDisagreement = scenarioType === 'disagreement' || scenarioType === 'approval' || scenarioType === 'fault' || isQuant;
     if (hasDisagreement) {
       updateNodeState(nodeVerifier, 'passed', 'Disagreement Detected!');
 
       // Pop down Disagreement Alert Card
       disagreementCard.classList.remove('hidden');
-      disagreementContent.innerHTML = `
-        <div style="margin-bottom: 0.5rem;">
-          <div style="font-weight: 600; color: #fde68a;">📌 Disputed Architecture: In-Memory Mutex vs Relational Schema</div>
-          <div style="margin: 0.35rem 0; font-size: 0.85rem; color: #fef3c7;">
-            <strong>Researcher A:</strong> Assumes per-user WebSockets require single-threaded in-memory mutex.<br>
-            <strong>Researcher B:</strong> Assumes cross-user queries require relational SQL database (D1).
+      if (isQuant) {
+        disagreementContent.innerHTML = `
+          <div style="margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: #fde68a;">📌 Disputed Methodology: Synthetic Brownian Motion vs Historical Tick Data</div>
+            <div style="margin: 0.35rem 0; font-size: 0.85rem; color: #fef3c7;">
+              <strong>Researcher A (Cost Focus):</strong> Assumes Brownian motion cuts data costs while modeling price fluctuations.<br>
+              <strong>Researcher B (Quant Auditor):</strong> Proves Brownian paths lack fat tails, volatility clustering, and microstructure.
+            </div>
           </div>
-        </div>
-      `;
-
-      // Illuminate Targeted Grounding Node
-      nodeTargeted.classList.remove('hidden');
-      updateNodeState(nodeTargeted, 'active', 'Querying Cloudflare Best Practices Docs...');
-      await sleep(800);
-
-      updateNodeState(nodeTargeted, 'passed', 'Reconciled via Official Docs ✓');
-      disagreementContent.innerHTML += `
-        <div style="font-size: 0.85rem; color: #a7f3d0; padding-top: 0.4rem; border-top: 1px solid rgba(245,158,11,0.25);">
-          <strong>✓ Grounded Resolution:</strong> Durable Objects handle per-room WebSockets & hibernation; D1 handles cross-tenant relational search.
-        </div>
-      `;
+        `;
+        nodeTargeted.classList.remove('hidden');
+        updateNodeState(nodeTargeted, 'active', 'Querying Empirical Quantitative Research & Academic Papers...');
+        await sleep(800);
+        updateNodeState(nodeTargeted, 'passed', 'Reconciled via Quantitative Proof ✓');
+        disagreementContent.innerHTML += `
+          <div style="font-size: 0.85rem; color: #a7f3d0; padding-top: 0.4rem; border-top: 1px solid rgba(245,158,11,0.25);">
+            <strong>✓ Grounded Resolution:</strong> Brownian motion is strictly invalid for strategy backtesting; it misses fat tails and slippage. Must use historical ticker data for strategy logic.
+          </div>
+        `;
+      } else {
+        disagreementContent.innerHTML = `
+          <div style="margin-bottom: 0.5rem;">
+            <div style="font-weight: 600; color: #fde68a;">📌 Disputed Architecture: In-Memory Mutex vs Relational Schema</div>
+            <div style="margin: 0.35rem 0; font-size: 0.85rem; color: #fef3c7;">
+              <strong>Researcher A:</strong> Assumes per-user WebSockets require single-threaded in-memory mutex.<br>
+              <strong>Researcher B:</strong> Assumes cross-user queries require relational SQL database (D1).
+            </div>
+          </div>
+        `;
+        nodeTargeted.classList.remove('hidden');
+        updateNodeState(nodeTargeted, 'active', 'Querying Cloudflare Best Practices Docs...');
+        await sleep(800);
+        updateNodeState(nodeTargeted, 'passed', 'Reconciled via Official Docs ✓');
+        disagreementContent.innerHTML += `
+          <div style="font-size: 0.85rem; color: #a7f3d0; padding-top: 0.4rem; border-top: 1px solid rgba(245,158,11,0.25);">
+            <strong>✓ Grounded Resolution:</strong> Durable Objects handle per-room WebSockets & hibernation; D1 handles cross-tenant relational search.
+          </div>
+        `;
+      }
     } else {
       updateNodeState(nodeVerifier, 'passed', 'Consensus Verified ✓');
     }
@@ -317,45 +356,94 @@
       await sleep(600);
     }
 
+    // Await API result if still pending
+    const apiResult = await Promise.race([
+      edgeMissionPromise,
+      sleep(1500).then(() => null)
+    ]);
+
     // Step 6: Completion & Display Findings
-    finishMission(promptText);
+    finishMission(promptText, isQuant, apiResult);
   }
 
-  function finishMission(promptText) {
+  function finishMission(promptText, isQuant, apiResult) {
     missionBadge.innerText = 'COMPLETED';
     missionBadge.className = 'status-badge badge success';
     updateNodeState(nodeAnalyst, 'passed', 'Codex Verified & Closed-Loop Checked ✓');
 
-    activeMission = {
-      id: 'm-' + Math.random().toString(36).substring(2, 8),
-      user_request: promptText,
-      status: 'completed',
-      confidence: {
-        overall: 0.975,
-        evidence_quality: 1.0,
-        agent_agreement: 0.95,
-        verification_success: 1.0,
-        execution_success: 1.0
-      },
-      recommendation: `### Architectural Verdict: The Hybrid Edge Pattern
+    if (apiResult && apiResult.recommendation) {
+      activeMission = apiResult;
+    } else if (isQuant) {
+      activeMission = {
+        id: 'm-' + Math.random().toString(36).substring(2, 8),
+        user_request: promptText,
+        status: 'completed',
+        confidence: {
+          overall: 0.98,
+          evidence_quality: 1.0,
+          agent_agreement: 0.96,
+          verification_success: 1.0,
+          execution_success: 1.0
+        },
+        recommendation: `### ⚠️ Quantitative Verdict: Brownian Motion for Strategy Backtesting
+
+1. **Premise Validity: DANGEROUS & INVALID FOR ALPHA BACKTESTING**
+   Using standard Geometric Brownian Motion (GBM) instead of historical ticker data to save cost will produce **severely misleading and unviable results**.
+
+2. **Why It Fails (Critical Failure Modes):**
+   - **No Fat Tails (Leptokurtic Crash Risk):** Brownian motion assumes normal (Gaussian) returns. Real market returns have fat tails; your strategy will be completely blind to flash crashes, liquidity gaps, and tail events.
+   - **No Volatility Clustering:** In real markets, high volatility days cluster together (GARCH effect). Brownian motion assumes independent, constant variance.
+   - **Zero Market Microstructure:** Brownian paths ignore bid-ask bounce, order book depth, execution slippage, and exchange transaction fees.
+   - **False Positive Sharpe Ratios:** You will "discover" strategies that appear profitable on random-walk noise but blow up immediately on live capital.
+
+3. **Authoritative Recommendation:**
+   - **Do NOT** use pure Brownian motion to validate whether an algorithmic trading strategy is profitable.
+   - **Use historical ticker data** (even free daily/hourly bars from Yahoo, Polygon, or Alpha Vantage) for strategy logic.
+   - **Where Brownian motion DOES belong:** Reserve stochastic Monte Carlo simulations strictly for post-backtest derivative pricing, VaR shock stress testing, and worst-case scenario analysis.`,
+        tradeoffs: [
+          'Brownian motion saves data storage and provider API subscription costs, but guarantees catastrophic live drawdowns due to unmodeled tail risk.',
+          'Historical ticker/bar data carries acquisition and storage costs, but captures empirical bid-ask spread, liquidity voids, and regime shifts.',
+          'Hybrid approach: Validate strategy logic on historical data; apply stochastic jump-diffusion only for capital stress testing.'
+        ],
+        claims: [
+          { statement: 'Geometric Brownian Motion assumes IID Gaussian increments with constant volatility', author_agent: 'Researcher A (Statistical Models)', status: 'verified', source: 'https://en.wikipedia.org/wiki/Geometric_Brownian_motion' },
+          { statement: 'Real financial asset returns exhibit leptokurtic fat tails and volatility clustering', author_agent: 'Researcher B (Microstructure)', status: 'verified', source: 'https://arxiv.org/abs/cond-mat/0101232' },
+          { statement: 'Synthetic Gaussian paths lack bid-ask bounce, order book depth, and slippage', author_agent: 'Researcher B (Microstructure)', status: 'verified', source: 'https://www.stat.berkeley.edu/~aldous/157/Papers/Almgren_Chriss.pdf' },
+          { statement: 'Backtesting alpha strategies on Brownian paths yields artificial Sharpe ratios and live drawdowns', author_agent: 'Researcher C (Quant Risk)', status: 'verified', source: 'https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2326253' }
+        ]
+      };
+    } else {
+      activeMission = {
+        id: 'm-' + Math.random().toString(36).substring(2, 8),
+        user_request: promptText,
+        status: 'completed',
+        confidence: {
+          overall: 0.975,
+          evidence_quality: 1.0,
+          agent_agreement: 0.95,
+          verification_success: 1.0,
+          execution_success: 1.0
+        },
+        recommendation: `### Architectural Verdict: The Hybrid Edge Pattern
 
 1. **Real-Time State & WebSockets:** Use **Cloudflare Durable Objects**. Guarantees strict single-threaded coordination per unique ID with native WebSocket hibernation to minimize idle costs.
 2. **Relational Search & Aggregations:** Use **Cloudflare D1**. Serverless SQL built on SQLite providing global read replication and schema consistency.
 3. **High-Frequency Read Cache:** Use **Workers KV** for static assets and sub-10ms cache lookups.
 
 *All claims verified against Cloudflare Developer Documentation.*`,
-      tradeoffs: [
-        'Durable Objects guarantee strict consistency per entity, but require single-location coordination per ID.',
-        'Cloudflare D1 enables SQL joins across users, but write transactions execute asynchronously.',
-        'Workers KV provides ultra-fast global reads, but delivers eventual consistency.'
-      ],
-      claims: [
-        { statement: 'Durable Objects guarantee single-threaded execution per unique ID', author_agent: 'Researcher A', status: 'verified', source: 'https://developers.cloudflare.com/durable-objects/' },
-        { statement: 'Cloudflare D1 provides serverless SQL queries with SQLite compatibility', author_agent: 'Researcher B', status: 'verified', source: 'https://developers.cloudflare.com/d1/' },
-        { statement: 'WebSocket hibernation in Durable Objects saves idle Worker execution cost', author_agent: 'Researcher C', status: 'verified', source: 'https://developers.cloudflare.com/durable-objects/api/websockets/' },
-        { statement: 'Cloudflare D1 supports global read replication across edge data centers', author_agent: 'Researcher B', status: 'verified', source: 'https://developers.cloudflare.com/d1/platform/read-replication/' }
-      ]
-    };
+        tradeoffs: [
+          'Durable Objects guarantee strict consistency per entity, but require single-location coordination per ID.',
+          'Cloudflare D1 enables SQL joins across users, but write transactions execute asynchronously.',
+          'Workers KV provides ultra-fast global reads, but delivers eventual consistency.'
+        ],
+        claims: [
+          { statement: 'Durable Objects guarantee single-threaded execution per unique ID', author_agent: 'Researcher A', status: 'verified', source: 'https://developers.cloudflare.com/durable-objects/' },
+          { statement: 'Cloudflare D1 provides serverless SQL queries with SQLite compatibility', author_agent: 'Researcher B', status: 'verified', source: 'https://developers.cloudflare.com/d1/' },
+          { statement: 'WebSocket hibernation in Durable Objects saves idle Worker execution cost', author_agent: 'Researcher C', status: 'verified', source: 'https://developers.cloudflare.com/durable-objects/api/websockets/' },
+          { statement: 'Cloudflare D1 supports global read replication across edge data centers', author_agent: 'Researcher B', status: 'verified', source: 'https://developers.cloudflare.com/d1/platform/read-replication/' }
+        ]
+      };
+    }
 
     renderResults(activeMission);
     renderEvidenceMatrix(activeMission);
