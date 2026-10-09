@@ -5,6 +5,7 @@
 [![Live Cloudflare Demo](https://img.shields.io/badge/Live%20Demo-Cloudflare%20Edge-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://sentinel-agent.atishayj2202.workers.dev)
 [![Workers AI](https://img.shields.io/badge/Workers%20AI-Llama%203.3%2070B-orange?style=for-the-badge&logo=meta&logoColor=white)](https://developers.cloudflare.com/workers-ai/)
 [![Tests Passing](https://img.shields.io/badge/Tests-10%2F10%20Passing-success?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Vibe Coding Journal](https://img.shields.io/badge/Vibe%20Coding-Complete%20History-purple?style=for-the-badge&logo=sparkles&logoColor=white)](VIBE_CODING_HISTORY.md)
 [![Prompt History](https://img.shields.io/badge/Documentation-Prompt%20History-blue?style=for-the-badge&logo=markdown&logoColor=white)](PROMPTS.md)
 
 > **Live Edge Deployment:** [https://sentinel-agent.atishayj2202.workers.dev](https://sentinel-agent.atishayj2202.workers.dev)  
@@ -256,14 +257,28 @@ sentinel-cloudflare-agent/
 ├── worker.js               # Cloudflare Edge Worker entrypoint (Workers AI Llama 3.3 binding)
 ├── wrangler.jsonc          # Cloudflare deployment configuration
 ├── ARCHITECTURE.md         # In-depth architectural design specification
+├── VIBE_CODING_HISTORY.md  # Complete human-AI vibe coding story & dialogue journal
 ├── PROMPTS.md              # Full AI-assisted prompt history log
 └── README.md               # You are here
 ```
 
 ---
 
+## ⚡ The Vibe Coding Story
+Per Cloudflare's application prompt (*"AI-assisted coding is encouraged, but you have to submit prompt history"*), we embraced the modern human-in-the-loop **Vibe Coding** paradigm from inception to production deployment.
+
+Read the complete turn-by-turn development story in [**`VIBE_CODING_HISTORY.md`**](VIBE_CODING_HISTORY.md):
+- **Act 1: The Spark & Python Foundation** — 4-phase DAG orchestration, Codex Policy-as-Code, and automated 10-scenario Pytest suite.
+- **Act 2: Real Cloudflare Edge Deployment** — Workers AI Llama 3.3 70B bindings and `wrangler deploy` to `workers.dev`.
+- **Act 3: The Brutal Vibe Check** — Live browser inspection, simplifying for a 15-year-old with the "School Volcano" and "Multiplayer Game" analogies, and a cybernetic UI overhaul.
+- **Act 4: The Quant Domain Stress-Test** — Challenging Sentinel with Brownian Motion vs. real ticker data (leptokurtic fat tails, volatility clustering, and microstructure).
+- **Act 5: The Differentiating Leap** — Live inter-agent telemetry terminal, 5-domain explorer, and the side-by-side single-agent vs. multi-agent comparison card.
+- **Act 6: Full Documentation & Git Sync** — Complete documentation of prompts and history.
+
+---
+
 ## 📜 Prompt History
-Per Cloudflare's application guidelines (*"AI-assisted coding is encouraged, but you have to submit prompt history"*), the full engineering prompt history is documented in [**`PROMPTS.md`**](PROMPTS.md).
+Per Cloudflare's application guidelines, the complete technical prompt specifications and system instructions are documented in [**`PROMPTS.md`**](PROMPTS.md).
 
 ---
 

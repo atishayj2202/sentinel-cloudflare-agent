@@ -181,6 +181,8 @@ Before proposing any external tool invocation or repository modification:
 
 ---
 
-## 🔗 Repository Reference
-- GitHub Repository: [Sentinel on GitHub](https://github.com/atishayjain/sentinel-cloudflare-agent)
-- Cloudflare Agents Documentation: [developers.cloudflare.com/agents](https://developers.cloudflare.com/agents/)
+## 🔗 Repository & History References
+- **Vibe Coding Journal**: [The Complete Vibe Coding History](VIBE_CODING_HISTORY.md)
+- **GitHub Repository**: [Sentinel on GitHub](https://github.com/atishayj2202/sentinel-cloudflare-agent)
+- **Live Cloudflare Edge Deployment**: [sentinel-agent.atishayj2202.workers.dev](https://sentinel-agent.atishayj2202.workers.dev)
+- **Cloudflare Agents Documentation**: [developers.cloudflare.com/agents](https://developers.cloudflare.com/agents/)
