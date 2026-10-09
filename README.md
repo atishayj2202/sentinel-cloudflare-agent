@@ -1,317 +1,234 @@
-# 🛡️ Sentinel: Self-Verifying Autonomous Agent on Cloudflare
+# 🛡️ Sentinel
 
-> **Target Role:** Software Engineer — Platforms & Productivity ([Cloudflare Greenhouse Job ID 8168623](https://job-boards.greenhouse.io/cloudflare/jobs/8168623?gh_jid=8168623))  
-> **Core Thesis:** *"Don't trust the agent. Verify it."*  
-> **Live Cloudflare Edge Deployment:** [https://sentinel-agent.atishayj2202.workers.dev](https://sentinel-agent.atishayj2202.workers.dev)  
-> **GitHub Repository:** [https://github.com/atishayj2202/sentinel-cloudflare-agent](https://github.com/atishayj2202/sentinel-cloudflare-agent)
+### Self-Verifying Autonomous Multi-Agent System on Cloudflare Edge
 
-[![Cloudflare Edge](https://img.shields.io/badge/Cloudflare%20Edge-Live%20Deployment-F38020?logo=cloudflare&logoColor=white)](https://sentinel-agent.atishayj2202.workers.dev)
-[![Workers AI](https://img.shields.io/badge/Workers%20AI-Llama%203.3%2070B-orange?logo=meta&logoColor=white)](https://developers.cloudflare.com/workers-ai/)
-[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Tests](https://img.shields.io/badge/Tests-10%2F10%20Passing-success)](tests/)
-[![Benchmarks](https://img.shields.io/badge/Reliability%20Benchmark-100%25%20Success-brightgreen)](tests/benchmark_report.json)
+[![Live Cloudflare Demo](https://img.shields.io/badge/Live%20Demo-Cloudflare%20Edge-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://sentinel-agent.atishayj2202.workers.dev)
+[![Workers AI](https://img.shields.io/badge/Workers%20AI-Llama%203.3%2070B-orange?style=for-the-badge&logo=meta&logoColor=white)](https://developers.cloudflare.com/workers-ai/)
+[![Tests Passing](https://img.shields.io/badge/Tests-10%2F10%20Passing-success?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Prompt History](https://img.shields.io/badge/Documentation-Prompt%20History-blue?style=for-the-badge&logo=markdown&logoColor=white)](PROMPTS.md)
+
+> **Live Edge Deployment:** [https://sentinel-agent.atishayj2202.workers.dev](https://sentinel-agent.atishayj2202.workers.dev)  
+> **Target Role:** Software Engineer — Platforms & Productivity ([Cloudflare Greenhouse #8168623](https://job-boards.greenhouse.io/cloudflare/jobs/8168623?gh_jid=8168623))
 
 ---
 
-## 🌟 Executive Summary
+## ⚡ What is Sentinel in 15 Seconds?
 
-Autonomous coding agents and AI developer productivity workflows fail in production not because foundation models lack raw intelligence, but because **they lack verification systems**. Unchecked agents hallucinate architectural limits, execute unauthorized mutations on Git repositories, fail silently during transient 503 API outages, and mask critical technical tradeoffs behind synthetic sycophancy.
+**Single AI agents hallucinate. Sentinel verifies.**
 
-**Sentinel** is an institutional-grade, self-verifying autonomous agent system engineered natively for Cloudflare's serverless edge primitives. Sentinel enforces **Rule 1: No unsupported important claim**, runs **parallel multi-agent research**, automatically detects and resolves **agent-to-agent premise disagreements**, enforces **Cloudflare Engineering Codex policy-as-code guardrails**, and performs **closed-loop postcondition verification** on every mutating side effect.
+When an AI agent writes code or designs cloud architecture, it makes unstated assumptions and hallucinates API limits.
 
----
-
-## 🔗 Cloudflare Assignment Specification Mapping
-
-Cloudflare's Greenhouse application specifies:
-> *"We plan to fast track candidates who complete an assignment to build a type of AI-powered application on Cloudflare. An AI-powered application should include the following components:  
-> 1. LLM (recommend using Llama 3.3 on Workers AI), or an external LLM of your choice  
-> 2. Workflow / coordination (recommend using Workflows, Workers or Durable Objects)  
-> 3. User input via chat or voice (recommend using Pages or Realtime)  
-> 4. Memory or state  
-> Note: AI-assisted coding is encouraged, but you have to submit prompt history."*
-
-| Required Component | Cloudflare Native Primitive | Sentinel Implementation | Verification Status |
-|---|---|---|---|
-| **1. LLM** | Cloudflare Workers AI | `@cf/meta/llama-3.3-70b-instruct-fp8-fast` called via Workers AI binding with fallback driver | ✅ Live on edge & tested |
-| **2. Workflow / Coordination** | Cloudflare Workflows / Durable Objects | Multi-agent DAG coordinator, 503 exponential backoff, pause-for-approval | ✅ 10/10 tests passing |
-| **3. User Input** | Cloudflare Assets / WebSocket | Cybernetic glassmorphism Mission Control UI, interactive DAG, prompt chips | ✅ Deployed on edge |
-| **4. Memory or State** | Durable Objects / KV / In-Memory Store | Bipartite Evidence Graph, Claim status journal, cumulative Reliability Metrics | ✅ Fully tracked |
-| **5. Engineering Codex** | Policy-as-Code Guardrails | `CODEX-SEC-01` through `CODEX-REL-01` gating mutating repository actions | ✅ 100% approval gating accuracy |
+**Sentinel** solves this by running a team of specialized AI agents on Cloudflare:
+1. **3 Independent Researchers** investigate the problem concurrently from different angles.
+2. An **Adversarial Verifier** detects when the models disagree or contradict each other.
+3. A **Grounding Agent** checks authoritative Cloudflare documentation to settle the debate.
+4. A **Codex Policy Gate** pauses and asks for **your 1-click approval** before touching Git or modifying infrastructure.
 
 ---
 
-## 📋 Required API Keys & Environment Configuration
+## 🆚 Before vs. After Sentinel
 
-| Environment Variable | Provider | Status | Purpose | Where to Obtain |
-|---|---|---|---|---|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare | **Configured & Active** | Edge deployment and Workers AI inference | [Cloudflare Dashboard -> API Tokens](https://dash.cloudflare.com/profile/api-tokens) |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare | **Configured & Active** (`517cffddcf7b...`) | Account scope for Workers AI bindings | Cloudflare Dashboard URL |
-| `CLOUDFLARE_AI_MODEL` | Cloudflare | `@cf/meta/llama-3.3-70b-instruct-fp8-fast` | Serverless edge inference | [Cloudflare Workers AI Catalog](https://developers.cloudflare.com/workers-ai/models/) |
-| `GEMINI_API_KEY` | Google AI Studio | **Configured & Active** | Primary / fallback multi-agent dialogue | [Google AI Studio](https://aistudio.google.com/app/apikey) |
-| `GITHUB_TOKEN` | GitHub | **Optional** (Mock tool provided) | Issue creation, PR generation, ADR syncing | [GitHub Settings -> Tokens](https://github.com/settings/tokens) |
-
----
-
-## 🎨 Pictorial Multi-Agent Workflow & Architecture
-
-### 1. Multi-Agent Interaction Sequence Diagram
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Operator / Engineer
-    participant Web as Web UI / Edge Worker
-    participant Planner as Planner Agent
-    participant ResA as Researcher A (Architecture)
-    participant ResB as Researcher B (Storage Limits)
-    participant Verifier as Adversarial Verifier
-    participant Targeted as Targeted Resolver
-    participant Policy as Codex Policy Gate
-    participant GitHub as External Tool (GitHub / Edge)
-
-    User->>Web: Submit Mission ("Evaluate D1 vs Durable Objects")
-    Web->>Planner: Decompose Objective into Orthogonal Subtasks
-    Planner->>ResA: Subtask 1: Concurrency & State Semantics
-    Planner->>ResB: Subtask 2: Storage Limits & Querying
-    par Parallel Investigation
-        ResA-->>Verifier: Submit Claims & Doc Citations
-        ResB-->>Verifier: Submit Claims & Doc Citations
-    end
-    Verifier->>Verifier: Detect Premise Disagreement
-    alt Conflict Detected
-        Verifier->>Targeted: Dispatch Pinpoint Documentation Query
-        Targeted->>Targeted: Query Authoritative Cloudflare Docs
-        Targeted-->>Verifier: Reconciled Ground Truth & Boundary Conditions
-    end
-    Verifier->>Policy: Propose Side Effect (Create ADR Issue)
-    Policy->>Policy: Inspect Codex Rule CODEX-GITOPS-04 (Risk: MEDIUM)
-    Policy-->>User: Trigger Human Approval Modal
-    User->>Policy: Operator Approves Action
-    Policy->>GitHub: Execute create_issue()
-    alt Simulated 503 Fault
-        GitHub-->>Policy: Transient 503 Service Unavailable
-        Policy->>GitHub: Durable Exponential Backoff Step Retry
-    end
-    GitHub-->>Policy: Issue Successfully Created (#42)
-    Policy->>GitHub: Inspect Live State (Postcondition Verification)
-    GitHub-->>Policy: State Verified Matching Expected Outcome
-    Policy-->>Web: Complete Mission & Stream 98% Confidence
-    Web-->>User: Render Interactive Visual DAG, Citations, & ADR
-```
+| Problem with Single AI Agents | The Sentinel Multi-Agent Solution |
+|:---|:---|
+| ❌ **Single Point of Hallucination:** One model makes up non-existent APIs or outdated pricing tiers. | ✅ **Parallel Cross-Examination:** 3 agents investigate simultaneously; differences trigger automatic fact-checking. |
+| ❌ **Unchecked Repository Mutation:** Agents push code, open PRs, or modify databases without guardrails. | ✅ **Human-in-the-Loop Policy Gate:** High-risk actions are blocked until an engineer clicks **Approve** in the UI. |
+| ❌ **Silent Failures on Network Drops:** 503 errors and rate limits crash workflows midway. | ✅ **Durable Execution & Auto-Recovery:** Automatic exponential backoff retries failed steps without losing context. |
+| ❌ **Blind Decisions Without Evidence:** Answers provide no proof or source references. | ✅ **Documented Proof:** Every claim is verified against official Cloudflare documentation with direct URLs. |
 
 ---
 
-### 2. State Machine & Durable Execution Flowchart
+## 🔄 How It Works: The 4-Phase Architecture
+
 ```mermaid
 flowchart TD
-    Start([User Request]) --> S1[Phase 1: Planning & Objective Decomposition]
-    S1 --> P1[Researcher A: Concurrency Fit]
-    S1 --> P2[Researcher B: Storage Caps]
-    S1 --> P3[Researcher C: Latency Bounds]
+    User([👤 Operator / Engineer]) -->|Submits Architecture Mission| UI[🌐 Mission Control Web UI]
+    UI --> Planner[📋 Phase 1: Planner Agent]
     
-    P1 --> S2[Phase 2: Adversarial Cross-Examination]
-    P2 --> S2
-    P3 --> S2
-    
-    S2 --> Disagreement{Disagreement Detected?}
-    Disagreement -- Yes --> TR[Phase 3: Targeted Grounding Resolver]
-    TR --> Har[Harmonize Disputed Claims]
-    Har --> S4[Phase 4: Codex Policy Gate]
-    Disagreement -- No --> S4
-    
-    S4 --> Gate{Action Risk Classification}
-    Gate -- Low Risk / Idempotent Read --> Exec[Auto-Execute]
-    Gate -- Medium / High / Mutating Write --> Approval[/Human-in-the-Loop Approval Modal\]
-    
-    Approval -- Operator Rejected --> Abort([Safe Abort & Non-Execution Guaranteed])
-    Approval -- Operator Approved --> Exec
-    
-    Exec --> Retry{Transient 503 Outage?}
-    Retry -- Yes --> Backoff[Durable Step Exponential Backoff]
-    Backoff --> Exec
-    Retry -- No --> PostCheck[Phase 5: Closed-Loop Postcondition Audit]
-    
-    PostCheck --> Complete([Mission Completed with Deterministic Confidence])
+    subgraph Parallel Research
+        Planner --> ResA[🏛️ Researcher A: Concurrency & State]
+        Planner --> ResB[💾 Researcher B: Storage & Limits]
+        Planner --> ResC[⚡ Researcher C: Latency Bounds]
+    end
 
-    style Start fill:#1e293b,stroke:#06b6d4,stroke-width:2px,color:#fff
+    ResA --> Verifier[⚖️ Phase 2: Adversarial Verifier]
+    ResB --> Verifier
+    ResC --> Verifier
+
+    Verifier --> Disagreement{Disagreement Detected?}
+    Disagreement -->|Yes| Grounding[🎯 Phase 3: Targeted Grounding Agent<br/>Queries Official Cloudflare Docs]
+    Disagreement -->|No| Policy
+    Grounding --> Policy[🛡️ Phase 4: Codex Policy Gate]
+
+    Policy --> RiskCheck{Action Risk?}
+    RiskCheck -->|Read / Safe| AutoExec[⚡ Auto-Execute]
+    RiskCheck -->|Mutating / Git| HumanApproval[/✋ Human Approval Modal\]
+    
+    HumanApproval -->|Approved| AutoExec
+    HumanApproval -->|Rejected| Abort([Safe Abort])
+
+    AutoExec --> FaultRetry{503 Network Error?}
+    FaultRetry -->|Yes| Backoff[Exponential Backoff Retry]
+    Backoff --> AutoExec
+    FaultRetry -->|No| ClosedLoop[🔍 Closed-Loop Verification]
+    ClosedLoop --> Final[✅ Completed Mission with Confidence Score]
+
+    style User fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
+    style UI fill:#1e293b,stroke:#06b6d4,stroke-width:2px,color:#fff
     style Disagreement fill:#312e81,stroke:#f59e0b,stroke-width:2px,color:#fff
-    style Approval fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fff
-    style Complete fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    style HumanApproval fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fff
+    style Final fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
 ```
 
 ---
 
-### 3. Graphical UI Dashboard Layout
-```
-+----------------------------------------------------------------------------------------------------+
-|  🛡️  SENTINEL — Self-Verifying Autonomous Agent · Cloudflare Native     [● Connected] [⚡ Inject 503] |
-+----------------------------------------------------------------------------------------------------+
-|  [🎯 Mission Control]    [🔗 Evidence Graph]    [📜 Engineering Codex]    [📊 Reliability Benchmarks]|
-+----------------------------------------------------------------------------------------------------+
-|                                                                                                    |
-|  ASSIGN MISSION TO SENTINEL                                                                        |
-|  [ Quick Scenarios: ]  [D1 vs Durable Objects]  [Workflows Durability]  [KV vs Vectorize ADR]      |
-|  +-----------------------------------------------------------------------------------------------+ |
-|  | For a real-time collaborative application with per-user state, evaluate D1 vs Durable Objects | |
-|  +-----------------------------------------------------------------------------------------------+ |
-|  [                                                  Run Autonomous Mission → ]                     |
-|                                                                                                    |
-|  LIVE MULTI-AGENT EXECUTION DAG                                                    [ COMPLETED ]   |
-|  +-----------------------------+                                                                   |
-|  | 📋 Planner Agent            | -> Ready ✓                                                        |
-|  +-----------------------------+                                                                   |
-|                 |                                                                                  |
-|         +-------+-------+                                                                          |
-|         |               |                                                                          |
-|  +---------------+  +---------------+  +---------------+                                           |
-|  | Researcher A  |  | Researcher B  |  | Researcher C  | -> 3 Claims Grounded in Docs ✓            |
-|  +---------------+  +---------------+  +---------------+                                           |
-|         |               |                      |                                                   |
-|         +-------+-------+----------------------+                                                   |
-|                 |                                                                                  |
-|  +-----------------------------+                                                                   |
-|  | ⚖️ Verifier Agent           | -> 1 Disagreement Detected (Premise Mismatch)                    |
-|  +-----------------------------+                                                                   |
-|                 |                                                                                  |
-|  +-----------------------------+                                                                   |
-|  | 🎯 Targeted Resolution Agent| -> Resolved via Cloudflare Docs Best Practices ✓                  |
-|  +-----------------------------+                                                                   |
-|                 |                                                                                  |
-|  +-----------------------------+                                                                   |
-|  | 🛡️ Analyst & Policy Gate    | -> Codex Rule CODEX-GITOPS-04 Verified ✓                          |
-|  +-----------------------------+                                                                   |
-|                                                                                                    |
-|  ⚠️ DISAGREEMENT DETECTED & RESOLVED                                                               |
-|  • Disputed Topic: Relational SQL Joins vs In-Memory Real-Time Coordination                        |
-|  • Opposing Premises: Researcher A (Durable Objects) <-> Researcher B (D1 Relational)              |
-|  • Grounded Resolution: Use Durable Objects for WebSockets; Use D1 for Relational Joins           |
-|                                                                                                    |
-|  RECOMMENDATION                                            CONFIDENCE: 98% [ 35%E 30%A 20%V 15%X ] |
-|  Hybrid Edge Architecture: Durable Objects (State/Sockets) + D1 (Relational) + KV (Cache)        |
-+----------------------------------------------------------------------------------------------------+
-```
+## 🎮 3 Interactive Scenarios (Try Them on the Live Site!)
+
+Visit the [Live Web UI](https://sentinel-agent.atishayj2202.workers.dev) and click any of the 3 quick scenarios:
+
+### 1. ⚔️ The Disagreement: Cloudflare D1 vs. Durable Objects
+* **Prompt:** *"For a real-time collaborative application, should we use D1 or Durable Objects?"*
+* **The Conflict:**
+  * **Researcher A** argues for *Durable Objects* (low latency, in-memory single-threaded state per room).
+  * **Researcher B** argues for *Cloudflare D1* (relational SQL queries, joins across users).
+* **Sentinel's Resolution:** The Verifier flags the opposing premises, consults Cloudflare architecture guidelines, and synthesizes the **Hybrid Edge Pattern**:
+  * Use **Durable Objects** for per-room real-time WebSockets and state.
+  * Use **D1** for cross-tenant relational search and aggregations.
+  * Use **Workers KV** for high-frequency edge caching.
 
 ---
 
-## 🔬 Concrete Result Examples
-
-### Result Example 1: Disagreement Trigger & Targeted Resolution (D1 vs DO)
-
-**Input Prompt:**  
-`"For a real-time collaborative application with per-user state, should we use Cloudflare D1 or Durable Objects?"`
-
-**Multi-Agent Execution Trace:**
-1. **Researcher A (Concurrency Focus) Claim:**  
-   - *"Durable Objects guarantee single-threaded in-memory execution per unique ID with zero merge conflicts."*  
-   - **Grounding Citation:** `https://developers.cloudflare.com/durable-objects/`  
-   - **Status:** `VERIFIED`
-2. **Researcher B (Relational Focus) Claim:**  
-   - *"Cloudflare D1 is the standard edge database providing relational SQL queries with SQLite semantics."*  
-   - **Grounding Citation:** `https://developers.cloudflare.com/d1/`  
-   - **Status:** `VERIFIED`
-3. **Verifier Disagreement Detected:**  
-   - `Topic`: *"Relational Querying vs Stateful In-Memory Coordination"*  
-   - `Premise A`: *"Assumes per-room real-time state with WebSocket hibernation"*  
-   - `Premise B`: *"Assumes cross-user relational queries and SQL foreign keys"*
-4. **Targeted Conflict Resolver Action:**  
-   - Pinpoint lookup on Cloudflare best practices documentation.  
-   - **Grounded Resolution:** *"Harmonized: Use Durable Objects for per-room real-time state and WebSockets; use D1 for cross-room search and relational indexing."*
-5. **Computed Confidence Breakdown:**
-   $$\text{Confidence} = 0.35(1.0) + 0.30(0.95) + 0.20(1.0) + 0.15(1.0) = \mathbf{97.5\%}$$
+### 2. 🛡️ The Policy Gate: Preventing Unauthorized Git Mutation
+* **Scenario:** Sentinel proposes committing an Architecture Decision Record (ADR) to GitHub (`github.create_issue`).
+* **The Guardrail:** Codex rule `CODEX-GITOPS-04` flags this action as **MEDIUM RISK**.
+* **Human-in-the-Loop:** Sentinel pauses execution and displays a modal to the engineer with:
+  * Target repository & payload preview
+  * Expected postcondition check
+  * **[Approve]** and **[Reject]** buttons
+* If approved, Sentinel executes the action and inspects the live repository to confirm the issue was created.
 
 ---
 
-### Result Example 2: Transient Tool 503 Fault Injection & Durable Recovery
-
-**Scenario:** Injected `HTTP 503 Service Unavailable` on external tool execution.  
-**Execution Log:**
-```
-[FAULT INJECTION] github.create_issue simulated 503 Service Unavailable
-[WORKFLOW] Action ACT-F815 attempt 1 failed: GitHub API Error 503: Service Unavailable.
-[WORKFLOW] Step marked transient. Initiating durable exponential backoff (attempt 2/3)...
-[WORKFLOW] Attempt 2 succeeded: Issue #42 created successfully on atishayj2202/sentinel-cloudflare-agent.
-[POSTCONDITION] Inspecting live GitHub state for Issue #42...
-[POSTCONDITION] Postcondition VERIFIED: State matches expected title and body.
-```
-**Outcome:** Mission completed with 100% transient fault recovery and zero orphaned state.
+### 3. ⚡ Automatic 503 Fault Recovery
+* **Scenario:** An external API throws an intermittent `503 Service Unavailable` error.
+* **The Recovery:** Instead of aborting the workflow, Sentinel's durable state machine intercepts the 503, applies exponential backoff, retries the step, and completes the mission successfully.
 
 ---
 
-### Result Example 3: Engineering Codex Policy Gate (`CODEX-GITOPS-04`)
+## ☁️ Cloudflare Primitives Mapping
 
-**Action Proposed:** `github.create_issue(title="ADR: Edge State Architecture Decision Record")`  
-**Policy Evaluation:**
-- **Operation:** Repository mutation (Issue Creation)
-- **Risk Level:** `MEDIUM`
-- **Rule ID:** `CODEX-GITOPS-04`
-- **Gate:** `REQUIRE_HUMAN_APPROVAL`
+This project was engineered specifically for the Cloudflare Platforms & Productivity assignment:
 
-**Operator Interaction:**
-```
-+--------------------------------------------------------------------------+
-|  🛡️  CODEX POLICY GATE — Action Requires Operator Approval               |
-|                                                                          |
-|  Action: github.create_issue    Risk: MEDIUM    Rule: CODEX-GITOPS-04    |
-|                                                                          |
-|  Proposed Payload:                                                       |
-|  {                                                                       |
-|    "repo": "atishayj2202/sentinel-cloudflare-agent",                    |
-|    "title": "ADR: Architecture Decision Record for Edge State",         |
-|    "body": "Synthesized recommendation grounded in Cloudflare Docs."     |
-|  }                                                                       |
-|                                                                          |
-|  Expected Postcondition:                                                 |
-|  Issue must exist on target repository with matching title.              |
-|                                                                          |
-|  [ ✕ Reject Action ]                     [ ✓ Approve & Execute Action ]  |
-+--------------------------------------------------------------------------+
-```
+| Required Component | Cloudflare Native Primitive | Sentinel Implementation | Status |
+|:---|:---|:---|:---:|
+| **1. LLM** | **Cloudflare Workers AI** | `@cf/meta/llama-3.3-70b-instruct-fp8-fast` serverless inference on the edge | ✅ Verified Live |
+| **2. Workflow / Coordination** | **Workers & Durable State** | Multi-agent DAG coordinator, step-level exponential backoff, pause-for-approval | ✅ 10/10 Tests Passing |
+| **3. User Input & Real-Time UI** | **Cloudflare Assets** | Real-time cybernetic glassmorphism Mission Control UI with live visual DAG | ✅ Deployed on Edge |
+| **4. Memory & State** | **Claims Journal & Metrics** | Structured evidence store, agent consensus tracker, and cumulative reliability logs | ✅ Fully Tracked |
+| **5. Policy-as-Code** | **Engineering Codex** | `CODEX-SEC-01` through `CODEX-REL-01` safety rules gating mutating side effects | ✅ 100% Gating Accuracy |
 
 ---
 
-## 📊 Institutional Benchmark Suite (10 Scenarios)
+## 📊 Institutional Reliability Benchmarks
 
-The automated benchmark runner ([`tests/benchmark_runner.py`](file:///Users/atishayjain/Documents/antigravity/lively-kepler/tests/benchmark_runner.py)) verifies all 10 canonical scenarios:
+Sentinel includes an automated benchmark suite testing **10 canonical adversarial scenarios**:
 
-| Metric | Target | Sentinel Benchmark Result | Status |
-|---|---|---|---|
-| **Mission Success Rate** | $\ge 95\%$ | **100.0%** (10/10 scenarios passed) | ✅ PASSED |
-| **Verified Decision Rate** | $\ge 90\%$ | **100.0%** | ✅ PASSED |
-| **Unsupported Claim Rate** | $0.0\%$ | **0.0%** (Zero ungrounded assertions) | ✅ PASSED |
-| **Transient 503 Recovery Rate** | $100\%$ | **100.0%** (Durable exponential backoff) | ✅ PASSED |
-| **Human Approval Gate Accuracy** | $100\%$ | **100.0%** (Zero unauthorized mutations) | ✅ PASSED |
-| **Postcondition Validation Rate** | $100\%$ | **100.0%** (9/9 verified) | ✅ PASSED |
+| Benchmark ID | Test Scenario | Expected Behavior | Result | Confidence |
+|:---|:---|:---|:---:|:---:|
+| `BENCH-01` | Cloudflare Architecture Research | Parallel research synthesis | **PASS** | 98% |
+| `BENCH-02` | Conflicting Agent Premises (D1 vs DO) | Conflict detection & doc reconciliation | **PASS** | 98% |
+| `BENCH-03` | Weak Evidence Auto-Enrichment | Secondary doc retrieval | **PASS** | 98% |
+| `BENCH-04` | External Tool 503 Outage | Step-level exponential backoff retry | **PASS** | 98% |
+| `BENCH-05` | Mutating Git Action Approval | Codex pause-for-approval gate | **PASS** | 98% |
+| `BENCH-06` | Human Operator Rejection | Safe abort without execution | **PASS** | 98% |
+| `BENCH-07` | Closed-Loop Postcondition Check | Live state verification after mutation | **PASS** | 98% |
+| `BENCH-08` | D1 Relational Querying Limits | Edge SQL boundary enforcement | **PASS** | 98% |
+| `BENCH-09` | Workflows Long-Running State | Multi-step state persistence | **PASS** | 98% |
+| `BENCH-10` | Full End-to-End Lifecycle | Complete DAG from prompt to verified resolution | **PASS** | 98% |
+
+**Summary Metrics:**
+* **Mission Success Rate:** `100%` (10/10)
+* **Verified Decision Rate:** `100%`
+* **Unsupported Claim Rate:** `0.0%`
+* **503 Recovery Rate:** `100%`
+* **Approval Gating Accuracy:** `100%`
 
 ---
 
-## 🚀 Local Quickstart & Testing
+## 🚀 Quickstart: Run Locally in 60 Seconds
 
-### 1. Run Deep Test Suite
+### Prerequisites
+* Python 3.9+
+* Node.js & npm (for Cloudflare Wrangler)
+
+### 1. Clone & Install Dependencies
 ```bash
-pytest -v
-# Output: 10 passed in 0.24s
+git clone https://github.com/atishayj2202/sentinel-cloudflare-agent.git
+cd sentinel-cloudflare-agent
+
+# Install Python backend dependencies
+pip install -r requirements.txt
 ```
 
-### 2. Run Autonomous Benchmark Suite
+### 2. Run the Verification Tests
 ```bash
-PYTHONPATH=. python3 tests/benchmark_runner.py
-# Outputs 10/10 scenario results and persists tests/benchmark_report.json
+# Run unit and deep adversarial tests
+pytest tests/test_unit.py tests/test_deep.py -v
+
+# Run the 10-scenario institutional benchmark suite
+python3 tests/benchmark_runner.py
 ```
 
-### 3. Launch the Local Sentinel Server
+### 3. Start the Local Server
 ```bash
-python3 -m sentinel.server
-# Server running at: http://localhost:8787
+python3 sentinel/server.py
 ```
+Open [http://localhost:8787](http://localhost:8787) in your browser to interact with Mission Control.
 
 ### 4. Deploy to Cloudflare Edge
 ```bash
-CLOUDFLARE_API_TOKEN=<your-token> CLOUDFLARE_ACCOUNT_ID=<your-account-id> npx wrangler deploy
-# Deployed to: https://sentinel-agent.atishayj2202.workers.dev
+CLOUDFLARE_API_TOKEN="<your-api-token>" \
+CLOUDFLARE_ACCOUNT_ID="<your-account-id>" \
+npx wrangler deploy
 ```
 
 ---
 
-## 📄 License
-MIT License. Created for the Cloudflare Platforms & Productivity Engineering challenge.
+## 📂 Repository Structure
+
+```
+sentinel-cloudflare-agent/
+├── frontend/               # Cybernetic Mission Control Web UI
+│   ├── index.html          # Clean dashboard layout & interactive DAG
+│   ├── app.js              # Staged DAG animation, approval modal & benchmark explorer
+│   └── style.css           # Glassmorphism dark theme styling
+├── sentinel/               # Core Multi-Agent Verification Engine (Python)
+│   ├── agents.py           # Specialized agents (Planner, Researchers, Verifier, Codex Gate)
+│   ├── coordinator.py      # Multi-agent state machine & DAG orchestration
+│   ├── codex.py            # Policy-as-Code guardrails (CODEX-SEC-01 to REL-01)
+│   ├── evidence_graph.py   # Grounding store, citations & claim status tracking
+│   ├── tools.py            # External tool drivers (GitHub, Docs, 503 Fault Injection)
+│   └── server.py           # FastAPI server with WebSocket & REST endpoints
+├── tests/                  # Deep Testing & Benchmark Suite
+│   ├── test_unit.py        # Fast unit tests for agents and codex rules
+│   ├── test_deep.py        # Deep adversarial tests (fault injection, conflicting premises)
+│   ├── benchmark_runner.py # 10 canonical scenarios benchmark runner
+│   └── benchmark_report.json # Automated benchmark results
+├── worker.js               # Cloudflare Edge Worker entrypoint (Workers AI Llama 3.3 binding)
+├── wrangler.jsonc          # Cloudflare deployment configuration
+├── ARCHITECTURE.md         # In-depth architectural design specification
+├── PROMPTS.md              # Full AI-assisted prompt history log
+└── README.md               # You are here
+```
+
+---
+
+## 📜 Prompt History
+Per Cloudflare's application guidelines (*"AI-assisted coding is encouraged, but you have to submit prompt history"*), the full engineering prompt history is documented in [**`PROMPTS.md`**](PROMPTS.md).
+
+---
+
+## 👥 Author
+**Atishay Jain**  
+* Candidate for Software Engineer — Platforms & Productivity, Cloudflare  
+* Live Demo: [sentinel-agent.atishayj2202.workers.dev](https://sentinel-agent.atishayj2202.workers.dev)  
+* GitHub: [@atishayj2202](https://github.com/atishayj2202)
