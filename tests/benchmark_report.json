@@ -1,0 +1,125 @@
+{
+  "scenarios_evaluated": 10,
+  "total_duration_sec": 0.31,
+  "metrics": {
+    "mission_success_rate": 1.0,
+    "verified_decision_rate": 1.0,
+    "unsupported_claim_rate": 0.0,
+    "recovery_success_rate": 1.0,
+    "approval_accuracy": 1.0,
+    "postconditions_passed": 9,
+    "postconditions_checked": 9
+  },
+  "scenario_results": [
+    {
+      "id": "BENCH-01",
+      "name": "Simple Cloudflare Architecture Research",
+      "passed": true,
+      "latency": 0.033,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-02",
+      "name": "Conflicting Agent Workload Assumptions (D1 vs DO)",
+      "passed": true,
+      "latency": 0.025,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-03",
+      "name": "Weak Evidence Auto-Enrichment",
+      "passed": true,
+      "latency": 0.024,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-04",
+      "name": "Transient External Tool 503 Recovery",
+      "passed": true,
+      "latency": 0.076,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-05",
+      "name": "Medium-Risk Human Approval Gating",
+      "passed": true,
+      "latency": 0.028,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-06",
+      "name": "Human Approval Rejection Safety",
+      "passed": true,
+      "latency": 0.025,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-07",
+      "name": "Closed-Loop Postcondition Verification",
+      "passed": true,
+      "latency": 0.025,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-08",
+      "name": "D1 Relational Querying Bounds",
+      "passed": true,
+      "latency": 0.025,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-09",
+      "name": "Cloudflare Workflows Long-Running State",
+      "passed": true,
+      "latency": 0.024,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    },
+    {
+      "id": "BENCH-10",
+      "name": "Full End-to-End Mission Lifecycle",
+      "passed": true,
+      "latency": 0.024,
+      "confidence": 0.9751,
+      "claims_count": 13,
+      "verified_claims": 13,
+      "unsupported_claims": 0,
+      "conflicts_count": 8
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel — Self-Verifying Autonomous Agent on Cloudflare</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="header">
+    <div class="logo-area">
+      <div class="logo-icon">🛡️</div>
+      <div class="logo-text">
+        <h1>SENTINEL</h1>
+        <span class="subtext">Self-Verifying Autonomous Agent · Cloudflare Native</span>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-indicator">
+        <span class="pulse-dot"></span>
+        <span id="connection-status">Connecting to Edge...</span>
+      </div>
+      <button class="pill-btn danger" id="btn-inject-fault" title="Arm a transient 503 error on the next tool execution to observe durable recovery">
+        ⚡ Inject Tool 503 Fault
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="tab-mission">🎯 Mission Control</button>
+    <button class="tab-btn" data-tab="tab-evidence">🔗 Evidence Graph</button>
+    <button class="tab-btn" data-tab="tab-codex">📜 Engineering Codex</button>
+    <button class="tab-btn" data-tab="tab-benchmarks">📊 Reliability Benchmarks</button>
+  </nav>
+
+  <main class="main-container">
+    <!-- TAB 1: MISSION CONTROL -->
+    <section class="tab-content active" id="tab-mission">
+      <!-- Input Panel -->
+      <div class="panel input-panel">
+        <div class="input-header">
+          <h2>Assign Mission to Sentinel</h2>
+          <span class="badge info">Autonomous Multi-Agent Orchestration</span>
+        </div>
+        <p class="panel-desc">
+          Sentinel decomposes requests, runs parallel independent investigations, detects assumption conflicts, and gates mutating actions with human approval.
+        </p>
+
+        <div class="prompt-chips">
+          <span class="chip-label">Quick Scenarios:</span>
+          <button class="chip" data-prompt="For a multi-user real-time application with per-user state, should we use Cloudflare D1 or Durable Objects?">
+            D1 vs Durable Objects (Disagreement Trigger)
+          </button>
+          <button class="chip" data-prompt="Evaluate Cloudflare Workflows for coordinating multi-day human-in-the-loop approvals.">
+            Workflows Durability Analysis
+          </button>
+          <button class="chip" data-prompt="Architect an edge caching layer using Workers KV vs Vectorize and publish ADR.">
+            KV vs Vectorize + GitHub ADR
+          </button>
+        </div>
+
+        <form id="mission-form" class="mission-form">
+          <textarea id="mission-input" placeholder="Enter an architectural question or task for Sentinel to investigate, verify, and execute..." rows="3" required></textarea>
+          <div class="form-actions">
+            <button type="submit" class="primary-btn" id="btn-run-mission">
+              <span>Run Autonomous Mission</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Live Execution DAG & Progress -->
+      <div class="panel dag-panel" id="dag-panel">
+        <div class="panel-title-row">
+          <h3>Live Multi-Agent Execution DAG</h3>
+          <span class="status-badge" id="mission-state-badge">IDLE</span>
+        </div>
+
+        <div class="dag-container">
+          <div class="dag-node" id="node-planner">
+            <div class="node-icon">📋</div>
+            <div class="node-info">
+              <span class="node-title">Planner Agent</span>
+              <span class="node-desc">Objective Decomposition</span>
+            </div>
+            <span class="node-status">Ready</span>
+          </div>
+
+          <div class="dag-arrow">↓</div>
+
+          <div class="dag-parallel">
+            <div class="dag-node" id="node-res-a">
+              <div class="node-icon">🏛️</div>
+              <div class="node-info">
+                <span class="node-title">Researcher A</span>
+                <span class="node-desc">Architecture & Concurrency</span>
+              </div>
+              <span class="node-status">Idle</span>
+            </div>
+            <div class="dag-node" id="node-res-b">
+              <div class="node-icon">💾</div>
+              <div class="node-info">
+                <span class="node-title">Researcher B</span>
+                <span class="node-desc">Storage & Cost Projections</span>
+              </div>
+              <span class="node-status">Idle</span>
+            </div>
+            <div class="dag-node" id="node-res-c">
+              <div class="node-icon">⚡</div>
+              <div class="node-info">
+                <span class="node-title">Researcher C</span>
+                <span class="node-desc">Workload Latency Fit</span>
+              </div>
+              <span class="node-status">Idle</span>
+            </div>
+          </div>
+
+          <div class="dag-arrow">↓</div>
+
+          <div class="dag-node" id="node-verifier">
+            <div class="node-icon">⚖️</div>
+            <div class="node-info">
+              <span class="node-title">Verifier Agent</span>
+              <span class="node-desc">Cross-Examination & Conflict Detection</span>
+            </div>
+            <span class="node-status">Idle</span>
+          </div>
+
+          <!-- Targeted Resolution Node (Dynamically shown on conflict) -->
+          <div class="dag-node conflict-node hidden" id="node-targeted">
+            <div class="node-icon">🎯</div>
+            <div class="node-info">
+              <span class="node-title">Targeted Verification Agent</span>
+              <span class="node-desc">Resolving Assumption Mismatch</span>
+            </div>
+            <span class="node-status">Triggered</span>
+          </div>
+
+          <div class="dag-arrow">↓</div>
+
+          <div class="dag-node" id="node-analyst">
+            <div class="node-icon">🛡️</div>
+            <div class="node-info">
+              <span class="node-title">Analyst & Policy Gate</span>
+              <span class="node-desc">Codex Safety & Postcondition Check</span>
+            </div>
+            <span class="node-status">Idle</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disagreement Alert Banner -->
+      <div class="disagreement-card hidden" id="disagreement-card">
+        <div class="disagreement-header">
+          <span class="warning-icon">⚠️</span>
+          <h4>SENTINEL DETECTED DISAGREEMENT BETWEEN SUB-AGENTS</h4>
+        </div>
+        <div class="disagreement-body" id="disagreement-content">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="disagreement-footer">
+          <span class="badge success">⚡ Dynamic Targeted Investigation Auto-Triggered</span>
+        </div>
+      </div>
+
+      <!-- Findings & Recommendation Card -->
+      <div class="panel results-panel hidden" id="results-panel">
+        <div class="results-header">
+          <h3>Synthesized Recommendation</h3>
+          <div class="confidence-badge" id="confidence-score-badge">Confidence: 0%</div>
+        </div>
+
+        <div class="confidence-breakdown-row">
+          <div class="metric-pill">
+            <span class="label">Evidence Quality</span>
+            <span class="val" id="score-evidence">--</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">Agent Agreement</span>
+            <span class="val" id="score-agreement">--</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">Verification Success</span>
+            <span class="val" id="score-verification">--</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">Closed-Loop Check</span>
+            <span class="val" id="score-execution">--</span>
+          </div>
+        </div>
+
+        <div class="recommendation-content" id="recommendation-text"></div>
+
+        <div class="tradeoffs-box" id="tradeoffs-box">
+          <h4>Key Engineering Tradeoffs</h4>
+          <ul id="tradeoffs-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: EVIDENCE GRAPH -->
+    <section class="tab-content" id="tab-evidence">
+      <div class="panel">
+        <h2>Bipartite Evidence Graph</h2>
+        <p class="panel-desc">
+          Sentinel enforces Rule 1: <strong>No unsupported important claim.</strong> Every claim must be grounded in verified documentation citations.
+        </p>
+        <div class="claims-evidence-matrix" id="claims-matrix">
+          <p class="placeholder-msg">Run a mission to inspect the live claims and evidence graph.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: ENGINEERING CODEX -->
+    <section class="tab-content" id="tab-codex">
+      <div class="panel">
+        <h2>Cloudflare Engineering Codex — Policy-as-Code Guardrails</h2>
+        <p class="panel-desc">
+          Sentinel inspects proposed actions against security rules before invoking any tool. Idempotent reads are auto-allowed; mutating side effects are strictly gated.
+        </p>
+        <div class="table-container">
+          <table class="codex-table">
+            <thead>
+              <tr>
+                <th>Rule ID</th>
+                <th>Operation Type</th>
+                <th>Risk Classification</th>
+                <th>Human Approval</th>
+                <th>Policy Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>CODEX-SEC-01</code></td>
+                <td><code>github.get_file / search</code></td>
+                <td><span class="badge success">LOW</span></td>
+                <td>Auto-Allowed</td>
+                <td>Idempotent repository read query</td>
+              </tr>
+              <tr>
+                <td><code>CODEX-SEC-02</code></td>
+                <td><code>web.search / docs</code></td>
+                <td><span class="badge success">LOW</span></td>
+                <td>Auto-Allowed</td>
+                <td>Grounded documentation retrieval</td>
+              </tr>
+              <tr>
+                <td><code>CODEX-GITOPS-04</code></td>
+                <td><code>github.create_issue</code></td>
+                <td><span class="badge warning">MEDIUM</span></td>
+                <td><strong>REQUIRED</strong></td>
+                <td>Public mutation on repository requires operator review</td>
+              </tr>
+              <tr>
+                <td><code>CODEX-GITOPS-07</code></td>
+                <td><code>github.update_file</code></td>
+                <td><span class="badge danger">HIGH</span></td>
+                <td><strong>REQUIRED</strong></td>
+                <td>Code change carries regression risk</td>
+              </tr>
+              <tr>
+                <td><code>CODEX-REL-01</code></td>
+                <td><code>deployment.production</code></td>
+                <td><span class="badge danger">CRITICAL</span></td>
+                <td><strong>REQUIRED</strong></td>
+                <td>Production deployment requires signed authorization</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: BENCHMARKS -->
+    <section class="tab-content" id="tab-benchmarks">
+      <div class="panel">
+        <div class="benchmark-header-row">
+          <div>
+            <h2>AI Agent Reliability Benchmark Suite</h2>
+            <p class="panel-desc">10 Canonical adversarial scenarios evaluated across fault injection, lookahead bias, and postconditions.</p>
+          </div>
+          <button class="primary-btn" id="btn-run-benchmark">Run All 10 Benchmarks</button>
+        </div>
+
+        <div class="benchmark-stats-grid">
+          <div class="stat-card">
+            <span class="stat-number" id="bm-success-rate">100%</span>
+            <span class="stat-label">Mission Success Rate</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="bm-verified-rate">100%</span>
+            <span class="stat-label">Verified Decision Rate</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="bm-unsupported-rate">0.0%</span>
+            <span class="stat-label">Unsupported Claim Rate</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="bm-recovery-rate">100%</span>
+            <span class="stat-label">Transient 503 Recovery</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="bm-gating-rate">100%</span>
+            <span class="stat-label">Approval Gate Accuracy</span>
+          </div>
+        </div>
+
+        <div class="table-container" style="margin-top: 1.5rem;">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Scenario Name</th>
+                <th>Status</th>
+                <th>Confidence</th>
+                <th>Fault Injected</th>
+                <th>Targeted Resolution</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Human Approval Modal (Appears when mutating action proposed) -->
+  <div class="modal-backdrop hidden" id="approval-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="shield-badge">🛡️ CODEX POLICY GATE</span>
+        <h3>Consequential Action Requires Operator Approval</h3>
+      </div>
+      <div class="modal-body">
+        <div class="action-meta-row">
+          <div>
+            <span class="meta-label">Action</span>
+            <strong id="modal-action-type">github.create_issue</strong>
+          </div>
+          <div>
+            <span class="meta-label">Risk Level</span>
+            <span class="badge warning" id="modal-risk-badge">MEDIUM</span>
+          </div>
+          <div>
+            <span class="meta-label">Codex Rule</span>
+            <code id="modal-codex-rule">CODEX-GITOPS-04</code>
+          </div>
+        </div>
+
+        <div class="modal-preview">
+          <label>Proposed Payload:</label>
+          <div class="code-box" id="modal-action-payload"></div>
+        </div>
+
+        <div class="expected-outcome-box">
+          <label>Closed-Loop Expected Postcondition:</label>
+          <div class="outcome-desc">Issue must exist on target repository with matching title. Sentinel will verify live state post-execution.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-btn" id="btn-modal-reject">✕ Reject Action</button>
+        <button class="primary-btn success" id="btn-modal-approve">✓ Approve & Execute Action</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

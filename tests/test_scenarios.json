@@ -1,0 +1,83 @@
+[
+  {
+    "id": "BENCH-01",
+    "name": "Simple Cloudflare Architecture Research",
+    "prompt": "Explain the architectural difference between Cloudflare Workers and Pages.",
+    "expected_behavior": "Complete normally without conflicts",
+    "inject_fault": false,
+    "mutating_action": false
+  },
+  {
+    "id": "BENCH-02",
+    "name": "Conflicting Agent Workload Assumptions (D1 vs DO)",
+    "prompt": "For a multi-user real-time collaborative whiteboard with per-user state, should we use D1 or Durable Objects?",
+    "expected_behavior": "Detect disagreement, trigger targeted verification, and reach consensus",
+    "inject_fault": false,
+    "mutating_action": true
+  },
+  {
+    "id": "BENCH-03",
+    "name": "Weak Evidence Auto-Enrichment",
+    "prompt": "Evaluate Cloudflare Hyperdrive connection pooling latency metrics.",
+    "expected_behavior": "Query documentation and ground all claims",
+    "inject_fault": false,
+    "mutating_action": false
+  },
+  {
+    "id": "BENCH-04",
+    "name": "Transient External Tool 503 Recovery",
+    "prompt": "Analyze edge state locking and create tracking issue.",
+    "expected_behavior": "Survive 503 failure and succeed on durable retry",
+    "inject_fault": true,
+    "mutating_action": true
+  },
+  {
+    "id": "BENCH-05",
+    "name": "Medium-Risk Human Approval Gating",
+    "prompt": "Document migration strategy from Redis to Durable Objects on GitHub repository.",
+    "expected_behavior": "Gate action at AWAITING_APPROVAL under CODEX-GITOPS-04",
+    "inject_fault": false,
+    "mutating_action": true
+  },
+  {
+    "id": "BENCH-06",
+    "name": "Human Approval Rejection Safety",
+    "prompt": "Create architectural decision issue for vector search.",
+    "expected_behavior": "Stop safely with zero side effects upon operator rejection",
+    "inject_fault": false,
+    "mutating_action": true,
+    "operator_reject": true
+  },
+  {
+    "id": "BENCH-07",
+    "name": "Closed-Loop Postcondition Verification",
+    "prompt": "Publish verified state synchronization guidelines to repository.",
+    "expected_behavior": "Verify that live issue exists on target repo before reporting success",
+    "inject_fault": false,
+    "mutating_action": true
+  },
+  {
+    "id": "BENCH-08",
+    "name": "D1 Relational Querying Bounds",
+    "prompt": "When is D1 preferred over KV for transactional ledger writes?",
+    "expected_behavior": "Synthesize SQL trade-offs with high grounded confidence",
+    "inject_fault": false,
+    "mutating_action": false
+  },
+  {
+    "id": "BENCH-09",
+    "name": "Cloudflare Workflows Long-Running State",
+    "prompt": "How do Cloudflare Workflows ensure multi-day pause-and-resume durability?",
+    "expected_behavior": "Verify step-level persistence guarantees",
+    "inject_fault": false,
+    "mutating_action": false
+  },
+  {
+    "id": "BENCH-10",
+    "name": "Full End-to-End Mission Lifecycle",
+    "prompt": "Architect real-time multiplayer presence system using Durable Objects and publish ADR.",
+    "expected_behavior": "Execute all 7 pipeline steps flawlessly",
+    "inject_fault": false,
+    "mutating_action": true
+  }
+]
