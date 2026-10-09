@@ -1,11 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "sentinel-agent",
-  "main": "sentinel/server.py",
+  "account_id": "517cffddcf7b2e1e56e2d23b735f8654",
+  "main": "worker.js",
   "compatibility_date": "2026-10-09",
-  "compatibility_flags": [
-    "python_workers"
-  ],
   "vars": {
     "ENVIRONMENT": "production"
   },

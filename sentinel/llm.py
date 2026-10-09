@@ -28,8 +28,18 @@ class LLMProvider:
         fallback_data: Optional[Dict[str, Any]] = None,
         temperature: float = 0.1,
     ) -> Dict[str, Any]:
-        """Generate structured JSON output from LLM, with guaranteed fallback."""
-        # 1. Try Gemini if key configured
+        """Generate structured JSON output from LLM, prioritizing Cloudflare Workers AI."""
+        # 1. Prioritize Cloudflare Workers AI (Llama 3.3 70B)
+        if self.cf_token and self.cf_account:
+            try:
+                res = self._call_cloudflare_ai(prompt, system_prompt)
+                parsed = self._extract_json(res)
+                if parsed:
+                    return parsed
+            except Exception as e:
+                logger.warning(f"Cloudflare AI call failed: {e}. Trying Gemini/fallback.")
+
+        # 2. Try Gemini if configured
         if self.gemini_key:
             try:
                 res = self._call_gemini(prompt, system_prompt, temperature)
@@ -38,16 +48,6 @@ class LLMProvider:
                     return parsed
             except Exception as e:
                 logger.warning(f"Gemini call failed or parse error: {e}. Trying fallback.")
-
-        # 2. Try Cloudflare Workers AI if configured
-        if self.cf_token and self.cf_account:
-            try:
-                res = self._call_cloudflare_ai(prompt, system_prompt)
-                parsed = self._extract_json(res)
-                if parsed:
-                    return parsed
-            except Exception as e:
-                logger.warning(f"Cloudflare AI call failed: {e}. Trying fallback.")
 
         # 3. Deterministic high-quality synthetic fallback
         if fallback_data is not None:
@@ -102,10 +102,23 @@ class LLMProvider:
                 "Content-Type": "application/json",
             },
         )
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=30) as resp:
             data_resp = json.loads(resp.read().decode("utf-8"))
             if data_resp.get("success"):
-                return data_resp.get("result", {}).get("response", "")
+                result = data_resp.get("result", {})
+                resp_val = result.get("response")
+                if isinstance(resp_val, dict):
+                    return json.dumps(resp_val)
+                elif isinstance(resp_val, str) and resp_val.strip():
+                    return resp_val
+                
+                choices = result.get("choices", [])
+                if choices:
+                    c = choices[0]
+                    if "message" in c and "content" in c["message"]:
+                        return c["message"]["content"]
+                    if "text" in c:
+                        return c["text"]
         return ""
 
     def _extract_json(self, raw_text: str) -> Optional[Dict[str, Any]]:
