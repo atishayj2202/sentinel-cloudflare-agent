@@ -177,7 +177,7 @@ Sentinel includes an automated adversarial test harness (`tests/benchmark_runner
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone https://github.com/<your-username>/sentinel-cloudflare-agent.git
+git clone https://github.com/atishayj2202/sentinel-cloudflare-agent.git
 cd sentinel-cloudflare-agent
 pip install -r requirements.txt
 ```
